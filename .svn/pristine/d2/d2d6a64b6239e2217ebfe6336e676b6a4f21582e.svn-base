@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><{$title}> - <{$smarty.const.WEBNAME}></title>
+
+<link href="tpl/admin/css/megList.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="tpl/admin/css/jquery.min.js"></script>
+<link href="tpl/admin/css/Bootstrap/css/bootstrap.min.css"
+	rel="stylesheet" type="text/css" />
+<script type="text/javascript"
+	src="tpl/admin/css/Bootstrap/js/bootstrap.min.js"></script>
+<link href="tpl/admin/css/style.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.table tr:last-child {
+	border: none;
+}
+
+body {
+	background: #eee;
+}
+</style>
+<script type="text/javascript">
+	function reply(mid, gid) {
+		$.ajax({
+			type : "POST",
+			url : "<{spUrl c=adminMessage a=reply}>",
+			data : "mid=" + mid + "&gid=" + gid,
+			cache : false,
+			success : function(data) {
+				$("#replyForm").html(data);
+			}
+		});
+		return false;
+	}
+
+	function replyButton(mid) {
+		var reply = $("#replyVal").val();
+		var status = $("input[name='status']:checked").val();
+		$.ajax({
+			type : "POST",
+			url : "<{spUrl c=adminMessage a=AjaxReplyPost}>",
+			data : "mid=" + mid + "&reply=" + reply + "&status=" + status,
+			cache : false,
+			success : function(data) {
+				if (data != 'no') {
+					$('#replyModal').modal('hide');
+					$("#reply" + mid).html(
+							'<div class="reply"><div class="con">' + data
+									+ '</div></div>');
+				} else {
+					$("#replyMessage").html('回复失败');
+					alert('回复失败');
+				}
+
+			}
+		});
+		return false;
+
+	}
+</script>
+</head>
+
+<body>
+	<!--admin-bread-->
+	<!-- <div class="admin-bread">
+  <span class="fr">
+    <{include file="admin/index/smalltop.html"}>
+  </span> -->
+
+	<!--   <ul class="fl">
+      <li><a href="<{spUrl c=adminGuestbook a=ListGuestbook}>"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 开始</a></li>
+      <li>/</li>
+      <li><{$title}></li>
+      <li>/</li>
+      <li><{$g.gName}></li>
+  </ul> -->
+	<!-- </div> -->
+	<!--admin-bread End-->
+
+	<!--content-->
+	<div class="content">
+		<div>
+
+			<form name="form1" action="" method="post"
+				class="form-inline new-form-inline">
+				<input type="text" placeholder="来源URL(支持模糊查询)" value="<{$url}>"
+					name="url" class="url_input" />
+				<div class="form-group">
+					<label for="exampleInputName2">开始时间</label> <input name="stime"
+						id="stime" type="date" value="<{$stime}>" class="form-control" />
+				</div>
+				<div class="form-group">
+					<label for="exampleInputEmail2">结束时间</label> <input name="etime"
+						id="etime" class="form-control" type="date" value="<{$etime}>" />
+				</div>
+				<button type="submit" class="btn btn-default chaxun">查询</button>
+				<div class="pull-right daochu_div">
+					导出: <input type="button" class="btn btn-default daochu pull-right"
+						onclick="downloadExcel()" value="导出EXCEL" />
+				</div>
+				<select name="pageSize" class="pull-right form-control pages"
+					onchange="submit()">
+					<option value="10"<{if $pageSize eq '10'}>selected <{/if}>>10</option>
+					<option value="20"<{if $pageSize eq '20'}>selected <{/if}>>20</option>
+					<option value="50"<{if $pageSize eq '50'}>selected <{/if}>>50</option>
+				</select>
+				<input type="hidden" name="postsubmit" value="1" />
+			</form>
+
+
+		</div>
+		<!-- <p><{tpl_MegSum gid=$g.id}> - 管理员：<{$g.admin_name}></p> -->
+		<{if $lists}>
+		<div class="panel panel-default">
+			<table class="table  table-bordered new_border">
+				<tr class="active">
+					<td width="140" align="center" class="bgc"><strong>留言时间</strong></td>
+					<td width="350" class="bgc" align="center"><strong>请求url</strong></td>
+					<td width="120" align="center" class="bgc"><strong>姓名</strong></td>
+					<td width="100" align="center" class="bgc"><strong>手机</strong></td>
+					<td width="120" align="center" class="bgc"><strong>地址</strong></td>
+					<td width="250" align="center" class="bgc"><strong>留言内容</strong></td>
+					<td width="100" align="center" class="bgc"><strong>备注</strong></td>
+					<td width="180" align="center" class="bgc"><strong>操作</strong></td>
+				</tr>
+				<{foreach from=$lists item=m}>
+				<tr>
+					<td class="border-left" align="center"><{tpl_dateTime
+						format='Y年m月d日 H:i' timestamp=$m.addtime}></td>
+					<td align="center"><{$m.url}></td>
+					<td align="center"><{$m.name}></td>
+					<td align="center"><{$m.phone}></td>
+					<td align="center"><{$m.address}>(<{$m.ip}>)</td>
+					<td align="center"><{$m.message}></td>
+					<td align="center"  class="remark" data-id="<{$m.id}>"><{$m.remark}></td>
+					<td class="right" align="center"><a
+						class="btn btn-danger btn-xs new_mess_a"
+						href="javascript:void(0);"
+						onclick="delconfirm('id','<{$m.id}>','确定删除(ID:<{$m.id}>)的留言吗？');">
+							删除单个留言</a> <a class="btn btn-danger btn-xs new_mess_a"
+						href="javascript:void(0);"
+						onclick="delconfirm('ip','<{$m.ip}>','确定删除(IP:<{$m.ip}>)下的全部留言吗？');">删除同IP留言</a>
+				</tr>
+				<{/foreach}>
+			</table>
+		</div>
+
+		<{else}>
+		<div class="alert alert-warning" role="alert">
+			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			暂无留言！
+		</div>
+		<{/if}>
+
+		<!--分页-->
+		<{if $pager}>
+
+		<div class="b15"></div>
+
+		<div class="pag">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td align="center">
+						<div class="pager">
+							共有记录<{$pager.total_count}>条，共有<{$pager.total_page}>页（每页<{$pager.page_size}>条）：
+							<{$max_page=5}>
+							<!--每页最大页码数-->
+							<!--开始及结束页码-->
+							<{if $pager.current_page%$max_page ==0}>
+							<{$start_page=floor($pager.current_page/$max_page)*$max_page+1-$max_page}>
+							<{else}>
+							<{$start_page=floor($pager.current_page/$max_page)*$max_page+1}>
+							<{/if}> <{if ($start_page+$max_page)<=$pager.total_page}>
+							<{$end_page=$start_page+$max_page-1}> <{else}>
+							<{$end_page=$pager.total_page}> <{/if}> <{if $start_page <= 1 and
+							$pager.current_page <= 1 }> <a class="Invalid">首页</a> <a
+								class="Invalid">上一页</a> <{elseif $pager.current_page > 1 and
+							$pager.total_page <= $max_page}> <a
+								href="<{spUrl c=$c a=$a gid=$g.id page=$pager.first_page pageSize=$pageSize stime=$stime  etime=$etime}>">首页</a>
+							<a href="<{spUrl c=$c a=$a gid=$g.id page=$pager.prev_page pageSize=$pageSize stime=$stime etime=$etime}>">上一页</a>
+							<{elseif $pager.current_page > 1 and
+							$pager.current_page<=$max_page}> <a
+								href="<{spUrl c=$c a=$a gid=$g.id page=$pager.first_page pageSize=$pageSize stime=$stime etime=$etime}>">首页</a>
+							<a href="<{spUrl c=$c a=$a gid=$g.id page=$pager.prev_page pageSize=$pageSize stime=$stime etime=$etime}>">上一页</a>
+							<{else}> <a
+								href="<{spUrl c=$c a=$a gid=$g.id page=$pager.first_page pageSize=$pageSize stime=$stime etime=$etime}>">首页</a>
+							<a href="<{spUrl c=$c a=$a gid=$g.id page=$pager.prev_page pageSize=$pageSize stime=$stime etime=$etime}>">«</a>
+							<a
+								href="<{spUrl c=$c a=$a gid=$g.id page=$pager.current_page-$max_page pageSize=$pageSize stime=$stime etime=$etime}>">-<{$max_page}></a>
+							<{/if}>
+							<!--开始循环页码，同时如果循环到当前页设置属性为active-->
+							<{foreach from = $pager.all_pages item = thepage}> <{if $thepage
+							<= $end_page and $thepage >= $start_page}> <{if $thepage ==
+							$pager.current_page}> <a class="present"><{$thepage}></a>
+							<{else}> <a href="<{spUrl c=$c a=$a gid=$g.id page=$thepage pageSize=$pageSize stime=$stime etime=$etime}>"><{$thepage}></a>
+							<{/if}> <{/if}> <{/foreach}> <{if $end_page == $pager.total_page
+							}> <{if $pager.current_page == $pager.last_page}> <a
+								class="Invalid">下一页</a> <a class="Invalid">尾页</a> <{else}> <a
+								href="<{spUrl c=$c a=$a gid=$g.id page=$pager.next_page pageSize=$pageSize stime=$stime etime=$etime}>">下一页</a>
+							<a href="<{spUrl c=$c a=$a gid=$g.id page=$pager.last_page pageSize=$pageSize stime=$stime etime=$etime}>">尾页</a>
+							<{/if}> <{else}> <a
+								href="<{spUrl c=$c a=$a gid=$g.id page=$pager.current_page+$max_page pageSize=$pageSize stime=$stime etime=$etime}>">+<{$max_page}></a>
+							<a href="<{spUrl c=$c a=$a gid=$g.id page=$pager.next_page pageSize=$pageSize stime=$stime etime=$etime}>">下一页</a>
+							<a href="<{spUrl c=$c a=$a gid=$g.id page=$pager.last_page pageSize=$pageSize stime=$stime etime=$etime}>">尾页</a>
+							<{/if}>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="b15"></div>
+		<{/if}>
+		<!--分页 end-->
+
+		<!-- Modal -->
+		<div class="modal fade bs-example-modal-lg" id="replyModal"
+			tabindex="-1" role="dialog" aria-labelledby="replyModal">
+			<div class="modal-dialog modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="replyModal">管理员回复：</h4>
+					</div>
+					<div class="modal-body">
+						<div id="replyForm"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+	<!--content End-->
+	<script>
+		function delconfirm(mold, v, tit) {
+			if (window.confirm(tit)) {
+				window.location = "<{spUrl c=adminMessage a=del}>&mold=" + mold
+						+ "&v=" + v;
+			}
+		}
+		function downloadExcel() {
+			var stime = $("#stime").val()
+			var etime = $("#etime").val()
+			document.form1.action = "/index.php?c=adminMessage&a=downLoad2Excel&gid=<{$g.id}>"
+			document.form1.submit();
+			document.form1.action = ""
+		}
+
+		//获取class为caname的元素 
+	$(function() {
+		$('.remark').click(function() {
+			
+			var td = $(this);
+			var messageid = $(this).data('id');
+	 
+			var txt = td.html();
+			var inputtxt = "<input type='text'  value='" + txt + "'/>";
+			if ($(this).children("input").length){ 
+						return ;
+			}
+			else{
+			var input = $("<input type='text'  value='" + txt + "'/>");
+			td.html(inputtxt);
+			
+			//获取焦点 
+			input.trigger("focus");
+			//文本框失去焦点后提交内容，重新变为文本 
+			$(this).children("input").eq(0).blur(function(){
+				var newtxt = $(this).val();
+				//判断文本有没有修改 
+				if (newtxt != txt) {
+					td.html(newtxt);
+					 
+					   //不需要使用数据库的这段可以不需要 
+					 var newtxt = $.trim(newtxt); 
+					 //ajax异步更改数据库,加参数date是解决缓存问题 
+					 var url = "index.php?c=adminMessage&a=reMark"; 
+					 //使用get()方法打开一个一般处理程序，data接受返回的参数（在一般处理程序中返回参数的方法 context.Response.Write("要返回的参数");） 
+					 //数据库的修改就在一般处理程序中完成 
+					 $.post(url,{mid:messageid,remark:newtxt,gid:"<{$gid}>"}, function(data) { 
+					 if(data=="1") 
+					 { 
+					 
+					 
+					 return; 
+					 } 
+					  
+					 });   
+				 
+				} else {
+					td.html(newtxt);
+				}
+			});
+			}
+		});
+		});
+	</script>
+</body>
+</html>

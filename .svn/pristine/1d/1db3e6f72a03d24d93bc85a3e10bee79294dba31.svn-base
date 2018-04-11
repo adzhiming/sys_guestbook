@@ -1,0 +1,38 @@
+@charset "utf-8";
+/* CSS Document */
+.content{background:#eee;}
+.content .megList{position:relative;padding-left:60px;margin-bottom:25px;}
+.content .bg1{background-color: #FFF;}
+.content .bg1:hover,.content .bg2:hover{color: #000;background-color: #f2f9fd;}
+.content .megList .head{width:60px; position:absolute; top:0px; left:0px;height:100%;background:#9f9f9f;color:#fff;text-align:center;display:flex;align-items: center;justify-content: center;}
+.content .megList .head img{border-radius:5px; border:#cccccc 1px solid; padding:3px; background-color:#FFF; width:63px;}
+.content .megList .meg{border-left:#CCC 1px solid;padding:15px;}
+.content .megList .meg .mTop{font-size:12px; padding-bottom:10px; border-bottom:#8d8d8d 1px dashed; color:#666;}
+
+.content .megList .meg .mContent{padding:18px 0px; font-size:13px; line-height:25px;}
+.content .megList .meg .mContent .reply{background-color: #FFFFFF;padding:10px 15px;font-size: 12px;border: 1px dashed #cccccc;margin-top:15px;color:#999;}
+.content .megList .meg .mContent .reply .tit{ border-bottom:#cccccc 1px solid; padding-bottom:5px; margin-bottom:5px; font-weight:bold; color:#FF8080}
+.content .megList .meg .mContent .reply .con{line-height:20px;}
+
+.content .megList .meg .mSm{padding-top:10px;text-align:right; color:#666}
+
+.content .Megnew{display:inline-block;width:45px;height:15px;background-image: url(../../images/new.png);background-repeat: no-repeat;background-position: center center; margin-bottom:-2px; margin-left:3px;}
+.content .megList .contor_btn{padding:3px 30px;border:1px solid #333;border-radius:15px;color:#333;margin-left:30px;}
+.red{color:#e60012;font-style:normal;}
+.new-form-inline{margin-bottom:25px !important;background:#fff;border-radius:5px;box-shadow:0px 0px 10px #999;padding:10px 20px;}
+.new-form-inline .chaxun{background:#1a1a1a;color:#fff;border:none;padding:6px 20px;margin-right:25px;margin-left:25px;}
+.new-form-inline .daochu_div{line-height:34px;}
+.new-form-inline .daochu{background:#fff;color:#666;border:1px solid #666;padding:5px 10px;margin-left:10px;}
+.new-form-inline .chaxun:hover, .new-form-inline .chaxun:focus, .new-form-inline .chaxun.focus, .new-form-inline .chaxun:active, .new-form-inline .chaxun.active{
+    background:#3e3d3d;color:#fff;
+}
+.new-form-inline .daochu:hover, .new-form-inline .daochu:focus, .new-form-inline .daochu.focus, .new-form-inline .daochu:active, .new-form-inline .daochu.active{
+    background:#fff;color:#666;
+}
+.new-form-inline .form-group input[type="date"]{background:#fff;border:none;border-bottom:1px solid #333;box-shadow: none;border-radius:0px;margin-left:5px;}
+.new-form-inline .url_input{background:#fff;border:none;border-bottom:1px solid #333;margin-right:20px;height:34px;text-align:center;width:220px;}
+.new_border .new_mess_a{border-radius:15px;background:#be1414;padding:2px 10px;}
+.new_border .new_mess_a:hover{color: #fff !important;box-shadow: 0px 0px 5px #666;}
+.table td{vertical-align:middle!important;}
+.new-form-inline .pages{margin-right:20px;border:none;border-bottom:1px solid #333;box-shadow: none;border-radius:0px;}
+.new-form-inline .pages:focus{border-color:#fff;box-shadow:0px 0px 0px #fff;border-bottom:1px solid #333;}
